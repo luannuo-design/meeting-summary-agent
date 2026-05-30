@@ -1,9 +1,13 @@
+import sys
+
 import anthropic
+
+sys.stdout.reconfigure(encoding="utf-8")
 
 client = anthropic.Anthropic()
 MODEL = "claude-opus-4-7"
 
-# ---------- 3 sample meeting notes ----------
+# ---------- 4 sample meeting notes ----------
 
 SAMPLES = {
     "1": {
@@ -43,7 +47,7 @@ Next standup: Thursday 9 am.
         """,
     },
     "3": {
-        "title": "Client Onboarding Kickoff — Acme Corp",
+        "title": "Client Onboarding Kickoff - Acme Corp",
         "notes": """
 Date: 2026-05-28
 Attendees: Lisa (Account Manager), David (Solutions Engineer), Rachel (Acme Corp CTO)
@@ -63,6 +67,44 @@ Rachel will share a sample data export (anonymised) with David by June 4 so Davi
 validate the migration scripts before the full run.
 
 Next milestone check-in: June 16 at 2 pm.
+        """,
+    },
+    "4": {
+        "title": "Project Steering Committee - Digital Customer Onboarding",
+        "notes": """
+Date: 2026-05-28
+Attendees: Sarah (Program Manager), James (Technology Lead), Priya (Product Owner),
+Michael (Risk Manager), Emily (Operations Lead)
+
+Sarah opened the session with an update on overall project status. The program remains
+on track for the July pilot release, although several dependencies require close
+monitoring over the next two weeks.
+
+James provided a technology delivery update. The identity verification component has
+completed development and is undergoing integration testing. Initial results are positive,
+but a small number of defects relating to document upload performance have been identified.
+James committed to resolving the issues by next Wednesday. He also needs final API
+specifications from the external vendor before the end of the week to avoid delays.
+
+Priya discussed customer experience testing. Early user testing showed strong satisfaction
+with the simplified onboarding journey, but participants were confused by proof-of-address
+requirements. Priya will work with the design team to revise the wording and provide
+updated mock-ups by Friday.
+
+Michael highlighted risk and compliance considerations. He requested confirmation that
+customer consent records are retained per regulatory requirements. James agreed to review
+the implementation and provide evidence to the Risk team before the next steering committee.
+
+Emily provided an operations readiness update. Frontline staff training materials are about
+80% complete, and pilot training sessions begin mid-June. Emily requested confirmation of
+final business process changes by June 10 so training content can be finalised.
+
+Action Items:
+- James to resolve document upload defects by next Wednesday.
+- James to obtain final API specifications from the external vendor by Friday.
+- Priya to update proof-of-address wording and provide revised designs by Friday.
+- James to provide consent record compliance evidence to Michael before the next meeting.
+- Emily to finalise training materials following confirmation of business process changes.
         """,
     },
 }
@@ -117,9 +159,9 @@ def main():
     for key, sample in SAMPLES.items():
         print(f"  {key}. {sample['title']}")
 
-    choice = input("\nEnter 1, 2, or 3: ").strip()
+    choice = input("\nEnter 1, 2, 3, or 4: ").strip()
     if choice not in SAMPLES:
-        print("Invalid choice. Please run the script again and enter 1, 2, or 3.")
+        print("Invalid choice. Please run the script again and enter 1, 2, 3, or 4.")
         return
 
     meeting = SAMPLES[choice]
