@@ -5,7 +5,7 @@ import anthropic
 sys.stdout.reconfigure(encoding="utf-8")
 
 client = anthropic.Anthropic()
-MODEL = "claude-opus-4-7"
+MODEL = "claude-opus-4-8"
 
 # ---------- 4 sample meeting notes ----------
 
@@ -109,6 +109,29 @@ Action Items:
     },
 }
 
+# ---------- helper: read pasted notes ----------
+
+def read_custom_meeting() -> dict:
+    title = input("\nEnter a title for the meeting: ").strip()
+    if not title:
+        title = "Untitled Meeting"
+
+    print(
+        "\nPaste your meeting notes below. "
+        "When you're done, type END on its own line and press Enter:"
+    )
+    lines = []
+    while True:
+        try:
+            line = input()
+        except EOFError:
+            break
+        if line.strip().upper() == "END":
+            break
+        lines.append(line)
+
+    return {"title": title, "notes": "\n".join(lines)}
+
 # ---------- helper: call Claude ----------
 
 def ask_claude(prompt: str) -> str:
@@ -158,13 +181,19 @@ def main():
     print("\nAvailable sample meetings:")
     for key, sample in SAMPLES.items():
         print(f"  {key}. {sample['title']}")
+    print("  5. Paste my own meeting notes")
 
-    choice = input("\nEnter 1, 2, 3, or 4: ").strip()
-    if choice not in SAMPLES:
-        print("Invalid choice. Please run the script again and enter 1, 2, 3, or 4.")
+    choice = input("\nEnter 1, 2, 3, 4, or 5: ").strip()
+    if choice == "5":
+        meeting = read_custom_meeting()
+        if not meeting["notes"].strip():
+            print("No notes entered. Please run the script again.")
+            return
+    elif choice in SAMPLES:
+        meeting = SAMPLES[choice]
+    else:
+        print("Invalid choice. Please run the script again and enter 1, 2, 3, 4, or 5.")
         return
-
-    meeting = SAMPLES[choice]
     print(f"\nYou selected: {meeting['title']}")
     print("-" * 55)
 
