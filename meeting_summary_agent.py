@@ -160,8 +160,13 @@ def extract_actions(notes: str) -> str:
 def identify_owners(actions: str) -> str:
     print("Identifying owners...")
     return ask_claude(
-        f"From these action items, create a table with columns: "
-        f"Owner | Action | Deadline\n\n{actions}"
+        f"You are given the action items extracted from a meeting (below). "
+        f"If they contain one or more actual action items, output ONLY a "
+        f"markdown table with columns: Owner | Action | Deadline. "
+        f"If the text states there are no action items (or contains none), "
+        f"reply with exactly this single line and nothing else: "
+        f"'No action items were identified — no owners to list.' "
+        f"Do not ask for more information or request additional text.\n\n{actions}"
     )
 
 def draft_email(title: str, summary: str, actions: str) -> str:
